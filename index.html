@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      <v-content>
+        <v-container fluid fill-height cyan lighten-5>
+          <v-layout column>  <!-- this is the new outer vertical layout -->
+            <v-flex>
+              <v-layout id="controls" row blue lighten-3 pa-3>
+                <v-flex xs6>
+                  <v-slider :label="`Number of users ${userCount}`" v-model="userCount" step="1" max="10"></v-slider>
+                  <v-btn color="success" @click="getUser">Fetch</v-btn>
+                </v-flex>
+              </v-layout>
+              <v-layout id="output" row deep-purple lighten-3 pa-3>
+               <v-flex xs8>
+                 {{ users }}
+                 <v-btn color="delete" @click="reset">Reset</v-btn>
+               </v-flex>
+              </v-layout>
+              <v-layout id="table" row purple>
+               <v-flex xs8>
+                 <template v-for="u in users">
+                    <tr>
+                      <td pa-2><img :src="u.picture.thumbnail" /></td>
+                      <td pa-2>{{u.name.first}} {{u.name.last}}</td>
+                      <td pa-2>{{u.email}}</td>
+                      <td pa-2>{{u.username}}</td>
+                      <td pa-2>{{u.cell}}</td>
+                    </tr>
+                 </template>
+               </v-flex>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-content>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+  <script>
+  new Vue({
+   el: '#app',
+   data: {
+     userCount: 1,
+     users: []
+   },
+   methods: {
+     getUser() {
+     fetch(`https://randomuser.me/api?results=${this.userCount}`)
+       .then(r => r.json())
+       .then(u => {
+         this.users = u.results;
+       });
+     },
+     reset() {
+       this.users = []
+     }
+   }
+  });
+  </script>
+</body>
+</html>
